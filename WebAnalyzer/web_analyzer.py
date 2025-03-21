@@ -30,18 +30,20 @@ try:
 
     #Q5
     from collections import Counter
-    import re
-    words = re.findall(r'\b\w+\b', page_text)
+    page_text = soup.get_text().lower()
+    words = page_text.split()
+    words = [word.strip('.,!?()[]{}":;') for word in words if word.strip('.,!?()[]{}":;')]
     word_counts = Counter(words)
     print("\nMost Common Words:")
     for word, count in word_counts.most_common(5):
         print(f"'{word}': {count} times")
+        
     #Q6
     longest_paragraph = ""
     longest_word_count = 0
     for p in paragraphs:
         p_text = p.get_text().strip()
-        p_words = re.findall(r'\b\w+\b', p_text.lower())
+        p_words = [word for word in p_text.lower().split() if word.strip('.,!?()[]{}":;')]
         word_count = len(p_words)
         if word_count >= 5 and word_count > longest_word_count:
             longest_paragraph = p_text
@@ -51,6 +53,7 @@ try:
     print(f"The longest paragraph contains {longest_word_count} words.")
     print("Paragraph content:")
     print(longest_paragraph[:200] + "..." if len(longest_paragraph) > 200 else longest_paragraph)
+    
     #Q7
     labels = ['Headings', 'Links', 'Paragraphs']
     values = [heading_count, link_count, paragraph_count]
@@ -61,4 +64,3 @@ try:
     
 except Exception as e:
     print(f"Error fetching content: {e}")
-    
